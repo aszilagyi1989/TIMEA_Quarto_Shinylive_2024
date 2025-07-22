@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/.quarto/
+_extensions
+renv
+TIMEA_Quarto_ShinyLive_Megye_R_files
+TIMEA_Quarto_ShinyLive_Megye_R.Rproj
+.Rprofile
+renv.lock
+shinylive-sw.js
