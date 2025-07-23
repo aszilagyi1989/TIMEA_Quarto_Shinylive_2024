@@ -58,7 +58,7 @@ library("sf")
   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
  
-telepules_MAP <- sf::read_sf("/vsizip//vsicurl/https://github.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/raw/refs/heads/main/JSon/megye_pbi.zip")
+telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ",", row.names = NULL)
 telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
 
 telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
