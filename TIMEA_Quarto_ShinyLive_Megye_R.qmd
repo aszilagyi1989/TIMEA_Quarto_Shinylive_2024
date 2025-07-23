@@ -7,11 +7,7 @@ resources:
  - shinylive-sw.js
  - timea_mutatok_2024.csv
  - timea_megyek_2024.csv
- - megye_pbi.zip
- - megye_pbi.shp
- - megye_pbi.cpg
- - megye_pbi.dbf
- - megye_pbi.shx
+ - megye_pbi.xlsx
 ---
 
 ```{shinylive-r}
