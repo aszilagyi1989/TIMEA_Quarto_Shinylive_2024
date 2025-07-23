@@ -56,7 +56,7 @@ ul.task-list li input[type="checkbox"] {
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 800
-library(shiny)
+library("shiny")
 library("dplyr")
 library("sf")
 
@@ -97,9 +97,7 @@ library("sf")
   telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
  
- download.file("/vsicurl/https://github.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/raw/refs/heads/main/JSon/megye_pbi.shp", "megye_pbi.shp")
- 
-telepules_MAP &lt;- read_sf("megye_pbi.shp")
+telepules_MAP &lt;- sf::read_sf("/vsizip//vsicurl/https://github.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/raw/refs/heads/main/JSon/megye_pbi.zip")
 telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
 
 telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
