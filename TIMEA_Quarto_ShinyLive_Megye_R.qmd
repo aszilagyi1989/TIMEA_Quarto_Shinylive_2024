@@ -15,6 +15,7 @@ resources:
 #| viewerHeight: 800
 library("shiny")
 library("dplyr")
+library("openxlsx")
 library("sf")
 library("shinyWidgets")
 library("plotly")
@@ -32,7 +33,6 @@ if (FALSE) {
        uiOutput("focsop"),
        uiOutput("mutato"),
        uiOutput("year"),
-       hr(),
        uiOutput("search"),
        sliderInput("alpha",
                    "Fedettség:",
@@ -55,11 +55,11 @@ if (FALSE) {
   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
  
-telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
-telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
 
 telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
-telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %>% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
 telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
 telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
 
@@ -77,11 +77,11 @@ telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
       telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
-telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
-telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
 
 telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
-telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %>% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
 telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
 telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
     
@@ -98,11 +98,11 @@ telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
      telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
-telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
-telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
 
 telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
-telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %>% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
 telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
 telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
     
@@ -119,11 +119,11 @@ telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
     telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
-telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
-telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
 
 telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
-telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %>% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
 telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
 telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
     
@@ -136,47 +136,73 @@ telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
   })
 
   
-  subsetted <- reactive({
-    
-    req(input$focsop)
-    req(input$mutato)
-    req(input$search)
-    req(input$year)
-    # req(input$color)
-    
-    telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
-  telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
- telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
-telepules_MAP <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
-telepules_MAP$Megyenév <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
-
-telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
-telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %>% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
-telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
-telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
-    
-    if (input$search != "Magyarország"){
-
-      telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year & Megyenév %in% input$search)
-
-    }else{
-      
-      telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year)
-      
-    }
-    
-  })
+#   subsetted <- reactive({
+#     
+#     req(input$focsop)
+#     req(input$mutato)
+#     req(input$search)
+#     req(input$year)
+#     # req(input$color)
+#     
+#      telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
+#   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
+#  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
+# telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+# telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
+# 
+# telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
+# telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+# telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
+# telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
+#     
+#     if (input$search != "Magyarország"){
+# 
+#       telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year & Megyenev %in% input$search)
+# 
+#     }else{
+#       
+#       telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year)
+#       
+#     }
+# 
+#   })
   
   
   output$mymap <- renderPlotly({
     
     req(input$focsop)
     req(input$mutato)
+    req(input$search)
     req(input$alpha)
+    
+      telepules_ATTRIBUTES <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
+   telepules_DATA <- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
+  telepules_DATA$NEV <- gsub(" vármegye", "", telepules_DATA$NEV)
+ telepules_MAP <- read.xlsx("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.xlsx", sheet = "megye_pbi")
+ telepules_MAP$Megyenev <- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenev)
+ 
+ telepules_DATA %>% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %>% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_DATA
+ telepules_MAP %>% left_join(telepules_DATA, by = c("Megyenev" = "NEV")) %>% select("Megyenev", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -> telepules_MAP
+ telepules_MAP$VALUE <- gsub(",", ".", telepules_MAP$VALUE)
+ telepules_MAP$VALUE <- as.numeric(telepules_MAP$VALUE)
+    
+     if (input$search != "Magyarország"){
+ 
+       telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year & Megyenev %in% input$search)
+ 
+     }else{
+       
+       telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year)
+       
+     }
+ 
+ telepules_MAP <- telepules_MAP %>% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop & MUTATO_MEGNEV %in% input$mutato & VON_IDO %in% input$year)
+# 
+# subsetted <- telepules_MAP
     
     # tryCatch({
       
-      map <- ggplot(data = subsetted()) + geom_sf(alpha = (input$alpha / 100), aes(text = Megyenév, fill = VALUE))
+      map <- ggplot(data = telepules_MAP) + geom_sf(alpha = (input$alpha / 100), aes(text = Megyenev, fill = VALUE))
       ggplotly(map) %>%
         layout(xaxis = list(autorange = TRUE),
                yaxis = list(autorange = TRUE))
