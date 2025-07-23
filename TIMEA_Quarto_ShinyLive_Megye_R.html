@@ -59,18 +59,19 @@ ul.task-list li input[type="checkbox"] {
 library("shiny")
 library("dplyr")
 library("sf")
+library("shinyWidgets")
+library("plotly")
+library("ggplot2")
+
+if (FALSE) {
+  library(munsell)
+}
+
 
  ui &lt;- fluidPage(
    titlePanel("Térképes Interaktív Megjelenítő Alkalmazás"),
    sidebarLayout(
      sidebarPanel(
-       sliderInput(
-         inputId = "bins",
-         label = "Number of bins:",
-         min = 1,
-        max = 50,
-         value = 30
-       ),
        uiOutput("focsop"),
        uiOutput("mutato"),
        uiOutput("year"),
@@ -83,7 +84,7 @@ library("sf")
                    value = 80)
      ),
      mainPanel(
-       plotOutput(outputId = "distPlot")
+       plotlyOutput("mymap")
      )
    )
  )
@@ -97,7 +98,7 @@ library("sf")
   telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
  
-telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ",", row.names = NULL)
+telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
 telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
 
 telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
@@ -119,7 +120,7 @@ telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
       telepules_ATTRIBUTES &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
   telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
  telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
-telepules_MAP &lt;- st_read("/vsizip//vsicurl/https://github.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/raw/refs/heads/main/JSon/megye_pbi.shp")
+telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
 telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
 
 telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
@@ -136,6 +137,17 @@ telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
   })
    
    output$search &lt;- renderUI({
+     
+     telepules_ATTRIBUTES &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
+  telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
+ telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
+telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
+telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+
+telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
+telepules_MAP %&gt;% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %&gt;% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_MAP
+telepules_MAP$VALUE &lt;- gsub(",", ".", telepules_MAP$VALUE)
+telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
     
     selectInput(
       "search", 
@@ -147,6 +159,17 @@ telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
   
   output$year &lt;- renderUI({
     
+    telepules_ATTRIBUTES &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
+  telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
+ telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
+telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
+telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+
+telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
+telepules_MAP %&gt;% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %&gt;% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_MAP
+telepules_MAP$VALUE &lt;- gsub(",", ".", telepules_MAP$VALUE)
+telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
+    
     selectInput(
       "year", 
       "Év",
@@ -155,41 +178,62 @@ telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
     
   })
 
+  
+  subsetted &lt;- reactive({
+    
+    req(input$focsop)
+    req(input$mutato)
+    req(input$search)
+    req(input$year)
+    # req(input$color)
+    
+    telepules_ATTRIBUTES &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Mutatok_2024.csv", sep = ";", row.names = NULL)
+  telepules_DATA &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/CSV/TIMEA_Megyek_2024.csv", sep = ";", row.names = NULL)
+ telepules_DATA$NEV &lt;- gsub(" vármegye", "", telepules_DATA$NEV)
+telepules_MAP &lt;- read.csv("https://raw.githubusercontent.com/aszilagyi1989/TIMEA_Quarto_Shinylive_2024/refs/heads/main/JSon/megye_pbi.csv", sep = ";", row.names = NULL)
+telepules_MAP$Megyenév &lt;- gsub("Csongrád", "Csongrád-Csanád", telepules_MAP$Megyenév)
+
+telepules_DATA %&gt;% left_join(telepules_ATTRIBUTES, by = c("M_KOD" = "MUTATO_KOD")) %&gt;% select("NEV", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_DATA
+telepules_MAP %&gt;% left_join(telepules_DATA, by = c("Megyenév" = "NEV")) %&gt;% select("Megyenév", "geometry", "VALUE", "M_KOD", "VON_IDO", "MUTATO_FOCSOP_MEGNEV", "MUTATO_MEGNEV") -&gt; telepules_MAP
+telepules_MAP$VALUE &lt;- gsub(",", ".", telepules_MAP$VALUE)
+telepules_MAP$VALUE &lt;- as.numeric(telepules_MAP$VALUE)
+    
+    if (input$search != "Magyarország"){
+
+      telepules_MAP %&gt;% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop &amp; MUTATO_MEGNEV %in% input$mutato &amp; VON_IDO %in% input$year &amp; Megyenév %in% input$search)
+
+    }else{
+      
+      telepules_MAP %&gt;% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop &amp; MUTATO_MEGNEV %in% input$mutato &amp; VON_IDO %in% input$year)
+      
+    }
+    
+  })
+  
+  
+  output$mymap &lt;- renderPlotly({
+    
+    req(input$focsop)
+    req(input$mutato)
+    req(input$alpha)
+    
+    # tryCatch({
+      
+      map &lt;- ggplot(data = subsetted()) + geom_sf(alpha = (input$alpha / 100), aes(text = Megyenév, fill = VALUE))
+      ggplotly(map) %&gt;%
+        layout(xaxis = list(autorange = TRUE),
+               yaxis = list(autorange = TRUE))
+      # 
+      # },
+      # error = function(error_message){
+      #   
+      #   NULL
+      #   
+      # })
+     
+  })
 
 
-   subsetted &lt;- reactive({
-
-     # req(input$focsop)
-     # req(input$mutato)
-     # req(input$search)
-     # req(input$year)
-     # req(input$color)
-
-     if (input$search != "Magyarország"){
-
-       telepules_MAP %&gt;% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop &amp; MUTATO_MEGNEV %in% input$mutato &amp; VON_IDO %in% input$year &amp; Megyenév %in% input$search)
-
-     }else{
-
-       telepules_MAP %&gt;% filter(MUTATO_FOCSOP_MEGNEV %in% input$focsop &amp; MUTATO_MEGNEV %in% input$mutato &amp; VON_IDO %in% input$year)
-
-     }
-
-   })
-
-
-
-   # output$distPlot &lt;- renderPlot({
-   # 
-   #   x &lt;- faithful$waiting
-   #   bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)
-   #   hist(x,
-   #     breaks = bins, col = "#75AADB", border = "white",
-   #     xlab = "Waiting time to next eruption (in mins)",
-   #     main = "Histogram of waiting times"
-   #   )
-   # 
-   # })
 
 }
 
